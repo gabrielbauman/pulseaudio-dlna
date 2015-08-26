@@ -89,6 +89,10 @@ class BaseEncoder(object):
     def priority(self):
         return self._priority
 
+    @priority.setter
+    def priority(self, value):
+        self._priority = value
+
     @property
     def state(self):
         if self._enabled:
@@ -116,11 +120,12 @@ class BaseEncoder(object):
         return self.priority > other.priority
 
     def __str__(self):
-        return '<{} bit-rate="{}" state="{}" enabled="{}" mime-types="{}">'.format(
+        return '<{} bit-rate="{}" state="{}" enabled="{}" priority="{}" mime-types="{}">'.format(
             self.__class__.__name__,
             unicode(self.bit_rate),
             unicode(self.state),
             unicode(self.enabled),
+            unicode(self.priority),
             ','.join(self.mime_types),
         )
 

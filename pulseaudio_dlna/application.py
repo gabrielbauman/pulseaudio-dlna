@@ -80,12 +80,18 @@ class Application(object):
         ]
 
         if options['--encoder']:
-            for encoder in pulseaudio_dlna.common.supported_encoders:
-                if encoder.suffix == options['--encoder']:
-                    pulseaudio_dlna.common.supported_encoders = [encoder]
-                    break
-            if len(pulseaudio_dlna.common.supported_encoders) != 1:
-                logger.error('You specified an unknown encoder! '
+            selected_encoders = []
+            priority = 20
+            for encoder_suffix in options['--encoder'].split(','):
+                for encoder in pulseaudio_dlna.common.supported_encoders:
+                    if encoder.suffix == encoder_suffix:
+                        encoder.priority = priority
+                        priority -= 1
+                        selected_encoders.append(encoder)
+                        break
+            pulseaudio_dlna.common.supported_encoders = selected_encoders
+            if len(pulseaudio_dlna.common.supported_encoders) == 0:
+                logger.error('You did not specify a any valid encoders! '
                              'Application terminates.')
                 sys.exit(1)
 
